@@ -1,0 +1,8 @@
+.venv
+.env
+__pycache__
+/tmp
+*.jar
+mysql
+loki-data
+redis
