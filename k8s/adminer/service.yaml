@@ -1,0 +1,11 @@
+# adminer Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: adminer
+spec:
+  selector:
+    app: adminer
+  ports:
+    - port: 8080
+      targetPort: 8080

@@ -1,0 +1,15 @@
+# traefik Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik
+spec:
+  selector:
+    app: traefik
+  ports:
+    - port: 80
+      targetPort: 80
+      name: web
+    - port: 8080
+      targetPort: 8080
+      name: admin

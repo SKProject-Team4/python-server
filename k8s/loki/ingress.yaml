@@ -1,0 +1,17 @@
+# loki Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: loki
+spec:
+  rules:
+    - host: loki.localhost
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: loki
+                port:
+                  number: 3100
