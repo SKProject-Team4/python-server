@@ -40,40 +40,47 @@ class CustomMiddleware(BaseHTTPMiddleware):
         start_time = time.time()
         redis_client = await get_redis(request)
 
-        #ip주소
         client_ip = request.client.host if request.client else "unknown"
-
-
-        token = request.headers["Authorization"].split(' ')[1] # 'Bearer TOKEN'에서 TOKEN 부분만 추출
-        if await redis_client.get(token) is None: #redis에 값이 없을 경우 인증오류를 반환함
-            raise HTTPException(status_code=401, detail={
-                "code": "INVALID_REQUEST",
-                "message": "요청 형식이 올바르지 않습니다."
-            })
-        
-        tokenCheckResult = checkJWTToken(token) #tokenCheckResult에서 디코딩된 내용으로 user_info내용 수정할것
-
-        print(token)
-        print(tokenCheckResult)
-        # 기본 사용자 정보 (기본값: 익명)
+        token = None
         user_info = {
-            "user_id": tokenCheckResult.get("userId",None),
-            "username": tokenCheckResult.get("username","anonymous"),
-            "role": tokenCheckResult.get("role","guest")
+            "user_id": None,
+            "username": "anonymous",
+            "role": "guest"
         }
 
-        if tokenCheckResult.get("success") == False:
-            raise HTTPException(status_code=401, detail={
-                "code": "INVALID_TOKEN",
-                "message": tokenCheckResult.get("error")
+        auth_header = request.headers.get("Authorization")
+        if auth_header and isinstance(auth_header, str) and auth_header.startswith("Bearer "):
+            parts = auth_header.split(" ", 1)
+            if len(parts) == 2:
+                token = parts[1]
+
+            tokenCheckResult = checkJWTToken(token)
+
+            print(token)
+            print(tokenCheckResult)
+
+            if tokenCheckResult.get("success") == False:
+                raise HTTPException(status_code=401, detail={
+                    "code": "INVALID_TOKEN",
+                    "message": tokenCheckResult.get("error")
+                })
+
+            if await redis_client.get(token) is None:
+                raise HTTPException(status_code=401, detail={
+                    "code": "INVALID_REQUEST",
+                    "message": "요청 형식이 올바르지 않습니다."
+                })
+
+            user_info.update({
+                "user_id": tokenCheckResult.get("userId"),
+                "username": tokenCheckResult.get("username", "anonymous"),
+                "role": tokenCheckResult.get("role", "guest")
             })
-        
+
         response = await call_next(request)
 
-        # 응답 시간 계산
-        duration = round((time.time() - start_time) * 1000, 2)  # ms
+        duration = round((time.time() - start_time) * 1000, 2)
 
-        # 로그 전송
         user_logger.info(
             "Request log",
             extra={
@@ -82,10 +89,11 @@ class CustomMiddleware(BaseHTTPMiddleware):
                 "path": request.url.path,
                 "ip": client_ip,
                 "response_time": duration,
-                **user_info, # ** = 딕셔너리형태로 전달
+                **user_info
             }
         )
 
         response.headers["Access-Control-Allow-Origin"] = "*"
 
         return response
+

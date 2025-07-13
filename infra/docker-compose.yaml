@@ -3,7 +3,7 @@ version: '3.8'
 services:
 
   spring-service:
-    image: planner:0.1
+    image: oldentomato/planner:0.6
     build:
       context: .
       dockerfile: ./spring/Dockerfile

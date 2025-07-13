@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: fastapi-service
-          image: oldentomato/travel-fastapi:0.1
+          image: oldentomato/travel-fastapi:0.7
           envFrom:
             - secretRef:
                 name: fastapi-env
