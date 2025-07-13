@@ -1,0 +1,23 @@
+# adminer Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adminer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: adminer
+  template:
+    metadata:
+      labels:
+        app: adminer
+    spec:
+      containers:
+        - name: adminer
+          image: adminer:latest
+          env:
+            - name: ADMINER_DEFAULT_SERVER
+              value: mysql
+          ports:
+            - containerPort: 8080

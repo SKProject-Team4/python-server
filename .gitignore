@@ -3,6 +3,6 @@
 __pycache__
 /tmp
 *.jar
-mysql
+/infra/mysql
 loki-data
-redis
+/infra/redis
