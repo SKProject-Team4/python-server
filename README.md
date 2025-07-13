@@ -15,26 +15,35 @@
         - K8s
 
 ### 디렉토리 구조  
-api
-    api.py # api 구성코드
-    middleware.py # 토큰검사,로깅 미들웨어
-router
-    langchainRouter.py #langgraph 로직api 라우터
-src
-    chains
-        qa_chains.py #langgraph 핵심로직
-    dependency
-        modules.py #redis,langgraph 의존성 주입용 객체선언
-    tools
-        langTools.py #langgraph tool 선언
-        prompt.py #prompt 선언
-test
-    langchainTest.py #langchain 테스트
-    redisTest.py #redis 연결테스트
-util
-    apiKey.py #env 데이터관리
-    jwt.py #jwt 관리
-    responseModel.py #오류핸들링
-.env 
-Dockerfile #fastAPI서버 도커파일
-requirements.txt #파이썬 모듈들
+```
+├── api
+│   ├── api.py                 # API 구성 코드
+│   └── middleware.py          # 토큰 검사 및 로깅 미들웨어
+│
+├── router
+│   └── langchainRouter.py     # LangGraph 로직 API 라우터
+│
+├── src
+│   ├── chains
+│   │   └── qa_chains.py       # LangGraph 핵심 로직
+│   │
+│   ├── dependency
+│   │   └── modules.py         # Redis, LangGraph 의존성 주입 객체 선언
+│   │
+│   └── tools
+│       ├── langTools.py       # LangGraph Tool 선언
+│       └── prompt.py          # Prompt 선언
+│
+├── test
+│   ├── langchainTest.py       # LangChain 테스트
+│   └── redisTest.py           # Redis 연결 테스트
+│
+├── util
+│   ├── apiKey.py              # 환경 변수 관리
+│   ├── jwt.py                 # JWT 관리
+│   └── responseModel.py       # 오류 핸들링
+│
+├── .env                       # 환경 변수 설정 파일
+├── Dockerfile                 # FastAPI 서버 Dockerfile
+└── requirements.txt           # Python 모듈 목록
+```
