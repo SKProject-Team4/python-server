@@ -5,7 +5,7 @@ metadata:
   name: fastapi-service
 spec:
   selector:
-    app: fastapi-service
+    app: fastapi-service  # 이걸 Deployment와 맞추기
   ports:
     - port: 1248
       targetPort: 1542

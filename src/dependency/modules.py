@@ -9,7 +9,8 @@ from chains.qa_chain import QA_Chain
 
 @asynccontextmanager #asynccontextmanager는 FastAPI의 lifespan의 인자를 넣기위해 위 어노테이션으로 wrapping해야한다
 async def lifespan(app):
-    app.state.redis = Redis.from_url(apiKey.getApiKey("REDIS_URL"), decode_responses=True) #커넥션 풀로 관리됨0
+    # app.state.redis = Redis.from_url(apiKey.getApiKey("REDIS_URL"), decode_responses=True) #커넥션 풀로 관리됨0
+    app.state.redis = Redis.from_url("redis://redis:6379", decode_responses=True) #커넥션 풀로 관리됨0
     # app.state.langagent = QA_Chain() 
     yield # 여기까지 실행되면 FastAPI 앱이 실행됨
     await app.state.redis.close()  # 앱이 종료될 때 실행됨

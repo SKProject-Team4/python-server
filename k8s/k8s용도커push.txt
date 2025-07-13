@@ -1,0 +1,72 @@
+gcloud 접속
+
+Set-ExecutionPolicy RemoteSigned -Scope Process
+gcloud auth login
+
+
+secret 관련
+
+kubectl get secrets
+
+kubectl describe secret <secret-name>
+
+kubectl delete secret my-secret
+
+전체 적용
+kubectl apply -R -f .  
+
+지우기 관련
+
+kubectl delete all --all
+
+kubectl delete deployment fastapi-deployment
+kubectl delete service fastapi-service
+kubectl delete ingress fastapi-service
+
+서비스 확인
+kubectl get svc fastapi-service
+
+서비스 어카운트 권한 부여(RBAC 이슈 대체)
+default 네임스페이스의 default 서비스어카운트에 클러스터 관리자 권한을 줘서 모든 리소스 조회 가능하게 만듭니다.
+
+권한이 너무 광범위해서 프로덕션 환경에서는 추천하지 않지만, 테스트/개발 환경에서는 빠르고 쉽게 문제를 해결할 수 있습니다.
+
+kubectl create clusterrolebinding default-admin-binding `
+  --clusterrole=cluster-admin `
+  --serviceaccount=default:default
+
+
+재시작
+
+kubectl rollout restart deployment traefik
+
+엔드포인트 연결 확인
+kubectl get endpoints fastapi-service
+
+
+수정
+
+특정 deployment 수정
+
+kubectl apply -f deployment.yaml
+
+yaml내부를 직접 수정 후 업데이트
+
+kubectl edit deployment <deployment-name>
+
+yaml이 로컬에서 수정된 상태에서 업데이트
+
+kubectl apply -f deployment.yaml
+
+
+현재 적용된 yaml 확인
+
+kubectl get deployment my-app -n default -o yaml
+
+
+내부 접속 
+
+kubectl exec -it spring-service-778998d7f4-mfsjc -- /bin/sh
+
+traefik 의 mioddleware 용
+kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/v2.10/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml

@@ -1,0 +1,11 @@
+# spring-service Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-service
+spec:
+  selector:
+    app: spring-service
+  ports:
+    - port: 8099
+      targetPort: 8099
